@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Solicitações</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/script.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Título -->
+        <h1>Dashboard de Solicitações</h1>
+
+        <div class="dashboard-content">
+            <!-- Container da Tabela -->
+            <div class="table-container">
+                <h2>Pedidos Abertos</h2>
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Departamento</th>
+                            <th>Email</th>
+                            <th>Descrição</th>
+                            <th>Urgência</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in data %}
+                        <tr>
+                            <td>{{ item.nome }}</td>
+                            <td>{{ item.department }}</td>
+                            <td>{{ item.email }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.urgency }}</td>
+                            <td>{{ item.date }}</td>
+                            <td>
+                                <form method="POST" action="/update-status">
+                                    <select name="status" onchange="this.form.submit()">
+                                        <option value="Não Iniciado" {% if item.status == "Não Iniciado" %}selected{% endif %}>Não Iniciado</option>
+                                        <option value="Andamento" {% if item.status == "Andamento" %}selected{% endif %}>Andamento</option>
+                                        <option value="Entregue" {% if item.status == "Entregue" %}selected{% endif %}>Entregue</option>
+                                    </select>
+                                    <input type="hidden" name="item_id" value="{{ loop.index }}">
+                                </form>
+                            </td>
+                            <td>
+                                <form method="POST" action="/delete">
+                                    <input type="hidden" name="item_id" value="{{ loop.index }}">
+                                    <button class="delete-button">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Container do Gráfico -->
+            <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Botões de Navegação -->
+        <div class="dashboard-actions">
+            <a href="/form" class="button">Novo Chamado</a>
+            <a href="/logout" class="button logout">Sair</a>
+        </div>
+    </div>
+
+    <!-- Dados para o gráfico -->
+    <span id="notStartedCount" hidden>{{ not_started_count }}</span>
+    <span id="inProgressCount" hidden>{{ in_progress_count }}</span>
+    <span id="completedCount" hidden>{{ completed_count }}</span>
+</body>
+</html>

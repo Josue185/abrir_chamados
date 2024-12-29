@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Chamados</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Formulário de Chamados</h1>
+        <p>Olá, <strong>{{ user_name }}, como posso ajudar?</strong>!</p>
+        <form action="/send-email" method="post">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+            <label for="department">Departamento:</label>
+            <input type="text" id="department" name="department" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="delivery_date">Data do Pedido:</label>
+            <input type="date" id="delivery_date" name="delivery_date" required>
+            <label for="description">Descrição:</label>
+            <textarea id="description" name="description" required></textarea>
+            <label for="urgency">Nível de Urgência:</label>
+            <select id="urgency" name="urgency" required>
+                <option value="Baixa">Baixa</option>
+                <option value="Média">Média</option>
+                <option value="Alta">Alta</option>
+            </select>
+            <button type="submit">Enviar</button>
+        </form>
+        <div class="form-actions">
+            {% if session.get("is_admin", False) %}
+                <a href="/dashboard" class="button_dash">Dashboard</a>
+            {% endif %}
+            <a href="/logout" class="button logout">Sair</a>
+        </div>
+    </div>
+</body>
+</html>
